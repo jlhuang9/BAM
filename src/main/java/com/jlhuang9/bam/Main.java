@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Main2 {
+public class Main {
     private static final TextView textView = Bank.getInstance();
 
     public static void main(String[] args) {
@@ -56,7 +56,7 @@ public class Main2 {
     }
 
     static class Registered extends JFrame implements ActionListener {
-        String[] ipts = { "密码", "确认密码", "真实姓名", "身份证号"};
+        String[] ipts = {"密码", "确认密码", "真实姓名", "身份证号"};
         int height = 20;
         int width = 70;
         int X = 50;
@@ -65,6 +65,7 @@ public class Main2 {
         JTextField[] textFields = new JTextField[ipts.length];
         String[] values = new String[ipts.length];
         JButton registered_btn;
+        JButton reset_btn;
 
         String[] checkValues = {"储蓄账户", "信用账户"};
         JRadioButton checkbox[] = new JRadioButton[checkValues.length];
@@ -92,16 +93,20 @@ public class Main2 {
 
             for (int i = 0; i < checkValues.length; i++) {
                 checkbox[i] = new JRadioButton(checkValues[i], i == 0);
-                checkbox[i].setBounds(X, Y, width+30, height);
+                checkbox[i].setBounds(X, Y, width + 30, height);
                 X += 100;
                 sele.add(checkbox[i]);
                 contentPane.add(checkbox[i]);
             }
 
             registered_btn = new JButton("注册");
+            reset_btn = new JButton("重置");
             registered_btn.setBounds(30, 200, 60, 30);
+            reset_btn.setBounds(130, 200, 60, 30);
             registered_btn.addActionListener(this);
+            reset_btn.addActionListener(this);
             contentPane.add(registered_btn);
+            contentPane.add(reset_btn);
         }
 
         @Override
@@ -119,11 +124,21 @@ public class Main2 {
                         }
                     }
                     Account register = textView.register(values, type);
-                    JOptionPane.showConfirmDialog(null, "注册成功！您的账号是： " + register.getId(),"成功",JOptionPane.OK_CANCEL_OPTION);
+                    JOptionPane.showConfirmDialog(null, "注册成功！您的账号是： " + register.getId(), "成功", JOptionPane.DEFAULT_OPTION);
+                    resetRegister();
                 } catch (RegisterException e1) {
                     JOptionPane.showMessageDialog(null, e1.getMessage(), "注册验证异常！", JOptionPane.ERROR_MESSAGE);
                 }
+            } else if (e.getSource() == reset_btn) {
+                resetRegister();
             }
+        }
+
+        private void resetRegister() {
+            for (JTextField textField : textFields) {
+                textField.setText(null);
+            }
+            checkbox[0].setSelected(true);
         }
     }
 }
